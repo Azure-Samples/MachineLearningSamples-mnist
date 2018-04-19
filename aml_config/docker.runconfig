@@ -7,7 +7,7 @@ target: local
 # Framework to execute inside. Allowed values are "Python" and "PySpark".
 framework: PySpark
 # Automatically prepare the run environment as part of the run itself.
-prepareEnvironment: false
+prepareEnvironment: true
 # Environment details
 environment:
 # Environment variables set for the run.
