@@ -6,14 +6,15 @@ from azureml.core.run import Run
 
 run = Run.get_submitted_run()
 
+print('fetching MNIST data...')
 mnist = fetch_mldata('MNIST original')
 
 # use the full set with 70k records
 #X, y = mnist['data'], mnist['target']
 
-# use the 5,000 random records to reduce training time.
-np.random_state = 42
-shuffle_index = np.random.permutation(70000)[:5000]
+# use a random subset of n records to reduce training time.
+n = 5000
+shuffle_index = np.random.permutation(70000)[:n]
 X, y = mnist['data'][shuffle_index], mnist['target'][shuffle_index]
 
 print('X: ', X.shape)
