@@ -16,7 +16,7 @@ environment:
 # Python details
   python:
 # user_managed_dependencies=True indicates the environmentwith be user managed. False indicates that AzureML willmanage the user environment.
-    userManagedDependencies: true
+    userManagedDependencies: false
 # The python interpreter path
     interpreterPath: python
 # Path to the conda dependencies file to use for this run. If a project
