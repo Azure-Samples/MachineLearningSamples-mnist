@@ -2,12 +2,7 @@ from sklearn.datasets import fetch_mldata
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 import numpy as np
-from azureml.core.run import Run, RunConfiguration
-
-# workaround for the docker.config file bug
-unconfig_object = RunConfiguration.load("docker")
-run_config_object.environment.python.user_managed_dependencies = False
-runconfig_object.save()
+from azureml.core.run import Run
 
 run = Run.get_submitted_run()
 
