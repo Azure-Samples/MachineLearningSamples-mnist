@@ -3,11 +3,22 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 import numpy as np
 from azureml.core.run import Run
+import os
 
+data_path = '/tmp'
+
+if "AZUREML_NATIVE_SHARE_DIRECTORY" in os.environ:
+    print('use shared folder:')
+    data_path = os.environ['AZUREML_NATIVE_SHARE_DIRECTORY']
+else:
+    print('shared volume not enabled.')
+
+print('data path:', data_path)
+        
 run = Run.get_submitted_run()
 
 print('fetching MNIST data...')
-mnist = fetch_mldata('MNIST original')
+mnist = fetch_mldata('MNIST original', data_home=data_path)
 
 # use the full set with 70k records
 #X, y = mnist['data'], mnist['target']
