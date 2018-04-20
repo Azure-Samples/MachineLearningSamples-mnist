@@ -23,7 +23,6 @@ dependencies:
 
   - pip:
     # Required packages for AzureML execution, history, and data preparation.
-    # - --index-url https://azuremlsdktestpypi.azureedge.net/sdk-release/rc/D72EBD8984244C659BDE1CFECDC3435
-    - --index-url https://azuremlsdktestpypi.azureedge.net/sdk-release/vrc/35F840AB632046E9AE741FE2A25B5F55/Release-304
+    - --index-url https://azuremlsdktestpypi.azureedge.net/sdk-release/rc/D72EBD8984244C659BDE1CFECDC3435
     - --extra-index-url https://pypi.python.org/simple
     - azureml-requirements
