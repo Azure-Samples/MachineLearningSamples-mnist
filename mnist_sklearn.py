@@ -6,7 +6,9 @@ from azureml.core.run import Run
 import os
 
 data_path = '/tmp'
-
+for o in os.environ:
+    print(o, os.environ[o])
+    
 if "AZUREML_NATIVE_SHARE_DIRECTORY" in os.environ:
     print('use shared folder:')
     data_path = os.environ['AZUREML_NATIVE_SHARE_DIRECTORY']
