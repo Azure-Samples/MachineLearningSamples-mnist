@@ -62,7 +62,7 @@ row_sums = conf_mx.sum(axis=1, keepdims=True)
 norm_conf_mx = conf_mx / row_sums
 np.fill_diagonal(norm_conf_mx, 0)
 
-print('plotting a normalized confusionn matrix.')
+print('plotting a normalized confusionn matrix...')
 plot_confusion_matrix(norm_conf_mx, save_file_name='./outputs/mx.png')
 
 
