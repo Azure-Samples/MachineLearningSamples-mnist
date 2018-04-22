@@ -20,6 +20,7 @@ dependencies:
   # The python interpreter version.
   # Currently Azure ML Workbench only supports 3.5.2 and later.
   - python=3.6.2
+  - matplotlib
 
   - pip:
     # Required packages for AzureML execution, history, and data preparation.
