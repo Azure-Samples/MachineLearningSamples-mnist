@@ -30,7 +30,7 @@ mnist = fetch_mldata('MNIST original', data_home=data_path)
 # use the full set with 70,000 records
 X, y = mnist['data'], mnist['target']
 
-print('plot some digits...')
+print('plotting some digits...')
 plt.figure(figsize=(9,9))
 example_images = np.r_[X[:12000:600], X[13000:30600:600], X[30600:60000:590]]
 plot_digits(example_images, images_per_row=10)
