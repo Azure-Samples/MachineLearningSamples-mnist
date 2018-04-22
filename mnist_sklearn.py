@@ -1,21 +1,19 @@
 from sklearn.datasets import fetch_mldata
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import confusion_matrix
+
 import numpy as np
 import os
 
-import matplotlib
-matplotlib.use('agg')
-import matplotlib.pyplot as plt
-
 from azureml.core.run import Run
-from PlotUtils import plot_digits
+from PlotUtils import plot_digits, plot_confusion_matrix
 
 data_path = '/tmp'
 os.makedirs('./outputs', exist_ok=True)
     
 if "AZUREML_NATIVE_SHARE_DIRECTORY" in os.environ:
-    print('use shared folder:')
+    print('use shared folder.')
     data_path = os.environ['AZUREML_NATIVE_SHARE_DIRECTORY']
 else:
     print('shared volume not enabled.')
@@ -31,11 +29,8 @@ mnist = fetch_mldata('MNIST original', data_home=data_path)
 X, y = mnist['data'], mnist['target']
 
 print('plotting some digits...')
-plt.figure(figsize=(9,9))
 example_images = np.r_[X[:12000:600], X[13000:30600:600], X[30600:60000:590]]
-plot_digits(example_images, images_per_row=10)
-plt.show()
-plt.savefig('./outputs/digits.png', format='png', dpi=300)
+plot_digits(instances=example_images, images_per_row=10, save_file_name='./outputs/digits.png')
 
 # use a random subset of n records to reduce training time.
 n = 5000
@@ -59,5 +54,15 @@ run.log('accuracy', acc)
 
 print('Overall accuracy:', acc)
 
+conf_mx = confusion_matrix(y_test, y_hat)
+print('Confusion matrix:')
+print(conf_mx)
+
+row_sums = conf_mx.sum(axis=1, keepdims=True)
+norm_conf_mx = conf_mx / row_sums
+np.fill_diagonal(norm_conf_mx, 0)
+
+print('plotting a normalized confusionn matrix.')
+plot_confusion_matrix(norm_conf_mx, save_file_name='./outputs/mx.png')
 
 
