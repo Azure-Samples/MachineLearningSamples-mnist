@@ -41,7 +41,7 @@ print('X: ', X_mnist.shape)
 print('y: ', y_mnist.shape)
 print('labels: ', np.unique(y_mnist))
 
-X_train, X_test, y_train, y_test = train_test_split(X_mnist, y_mnist, test_size = 0.3, random_state = 42)
+X_train, X_test, y_train, y_test = train_test_split(X_mnist, y_mnist, test_size = 15000, random_state = 42)
 
 print("training a tensorflow model...")
 
@@ -78,9 +78,13 @@ batch_size = 50
 train_size = X_train.shape[0]
 n_batches = train_size // batch_size
 n_batches = 10
-
 from tensorflow.examples.tutorials.mnist import input_data
 mnist = input_data.read_data_sets("/tmp/data/")
+
+from sklearn.linear_model import LogisticRegression
+lr = LogisticRegression()
+lr.fit(mnist.train.images[:100], mnist.train.labels[:100])
+print(lr)
 
 print(X_train.shape, y_train.shape)
 print(type(X_train), type(y_train))
@@ -91,14 +95,16 @@ with tf.Session() as sess:
         batch_count = 0
         perm = np.arange(train_size)
         np.random.shuffle(perm)
-        X_train, y_train = X_train[perm], y_train[perm]
+        #X_train, y_train = X_train[perm], y_train[perm]
         b_start = 0
         b_end = b_start + batch_size
         for _ in range(n_batches):
             X_batch, y_batch = X_train[b_start:b_end], y_train[b_start:b_end]
+            X_batch, y_batch = mnist.train.images[b_start:b_end], mnist.train.labels[b_start:b_end]
             b_start = b_start + batch_size
             b_end = min(b_start + batch_size, train_size)
             #X_batch, y_batch = mnist.train.next_batch(batch_size)
+            #X_batch, y_batch = mnist.train.images[b_start:b_end], mnist.train.labels[b_start:b_end]
             #print(b_start, b_end)
             print(X_batch, y_batch)
             print(X_batch.shape, y_batch.shape)
@@ -108,7 +114,6 @@ with tf.Session() as sess:
         acc_val = accuracy.eval(feed_dict={X: X_test, y: y_test})
         print(epoch, 'Train accuracy:', acc_train, 'Val accuracy;', acc_val)
         y_hat = np.argmax(logits.eval(feed_dict={X: X_test}), axis=1)
-
 acc = np.average(np.int32(y_hat == y_test))
 run.log('accuracy', acc)
 
