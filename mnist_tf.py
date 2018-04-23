@@ -26,11 +26,12 @@ print('fetching MNIST data...')
 mnist = fetch_mldata('MNIST original', data_home=data_path)
 
 # use the full set with 70,000 records
-X_mnist, y_mnist = mnist['data'], mnist['target']
+X_mnist, y_mnist = mnist['data'] / 255.0, mnist['target']
 
 print('plotting some digits...')
 example_images = np.r_[X_mnist[:12000:600], X_mnist[13000:30600:600], X_mnist[30600:60000:590]]
 plot_digits(instances=example_images, images_per_row=10, save_file_name='./outputs/digits.png')
+run.upload_file('sample digits', './outputs/digits.png')
 
 # use a random subset of n records to reduce training time.
 #n = 5000
@@ -73,22 +74,21 @@ with tf.name_scope('eval'):
 
 init = tf.global_variables_initializer()
 
-n_epochs = 5
+n_epochs = 20
 batch_size = 50
 train_size = X_train.shape[0]
 n_batches = train_size // batch_size
-n_batches = 10
-from tensorflow.examples.tutorials.mnist import input_data
-mnist = input_data.read_data_sets("/tmp/data/")
 
-from sklearn.linear_model import LogisticRegression
-lr = LogisticRegression()
-lr.fit(mnist.train.images[:100], mnist.train.labels[:100])
-print(lr)
+run.log("# of epochs", n_epochs)
+run.log("batch size", batch_size)
+
+#from tensorflow.examples.tutorials.mnist import input_data
+#mnist = input_data.read_data_sets("/tmp/data/")
 
 print(X_train.shape, y_train.shape)
 print(type(X_train), type(y_train))
 print('n_batches:', n_batches)
+
 with tf.Session() as sess:
     init.run()
     for epoch in range(n_epochs):
@@ -100,18 +100,17 @@ with tf.Session() as sess:
         b_end = b_start + batch_size
         for _ in range(n_batches):
             X_batch, y_batch = X_train[b_start:b_end], y_train[b_start:b_end]
-            X_batch, y_batch = mnist.train.images[b_start:b_end], mnist.train.labels[b_start:b_end]
+            #X_batch, y_batch = mnist.train.images[b_start:b_end], mnist.train.labels[b_start:b_end]
             b_start = b_start + batch_size
             b_end = min(b_start + batch_size, train_size)
             #X_batch, y_batch = mnist.train.next_batch(batch_size)
             #X_batch, y_batch = mnist.train.images[b_start:b_end], mnist.train.labels[b_start:b_end]
             #print(b_start, b_end)
-            print(X_batch, y_batch)
-            print(X_batch.shape, y_batch.shape)
-            print(type(X_batch), type(y_batch))
             sess.run(training_op, feed_dict={X: X_batch, y: y_batch})
-        acc_train = accuracy.eval(feed_dict={X: X_train, y: y_train})
+        acc_train = accuracy.eval(feed_dict={X: X_batch, y: y_batch})
         acc_val = accuracy.eval(feed_dict={X: X_test, y: y_test})
+        #run.log('Training Acc', acc_train)
+        #run.log('Validation Acc', acc_val)
         print(epoch, 'Train accuracy:', acc_train, 'Val accuracy;', acc_val)
         y_hat = np.argmax(logits.eval(feed_dict={X: X_test}), axis=1)
 acc = np.average(np.int32(y_hat == y_test))
@@ -129,5 +128,6 @@ np.fill_diagonal(norm_conf_mx, 0)
 
 print('plotting a normalized confusionn matrix...')
 plot_confusion_matrix(norm_conf_mx, save_file_name='./outputs/mx.png')
+run.upload_file('confusino matrix', './outputs/mx.png')
 
 
