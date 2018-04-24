@@ -4,7 +4,7 @@ import  matplotlib.pyplot as plt
 import numpy as np
 
 def plot_confusion_matrix(mx, save_file_name='mx.png'):
-    fig = plt.figure(figsize=(16,10))
+    fig = plt.figure(figsize=(8,5))
     ax = fig.add_subplot(111)
     cax = ax.matshow(mx, cmap=plt.cm.bone)
     ticks = np.arange(0, 10, 1)
