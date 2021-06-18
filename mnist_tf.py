@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 from sklearn.datasets import fetch_mldata
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import confusion_matrix
